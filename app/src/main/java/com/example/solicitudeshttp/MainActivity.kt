@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         b_solicitudhttp.setOnClickListener {
             if (Network.hayRed(this)){
-                Log.d("bSolicitudOnClick", descargardatos("http://www.google.com"))
+                Log.d("b_solicitudOnClick", descargardatos("http://www.google.com"))
             }else{
                 Toast.makeText(this, "Asegúrate de que tengas conexión a una red", Toast.LENGTH_SHORT).show()
             }
