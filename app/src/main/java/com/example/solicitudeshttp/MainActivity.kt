@@ -10,6 +10,8 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import okhttp3.Call
+import okhttp3.OkHttpClient
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -22,6 +24,7 @@ class MainActivity : AppCompatActivity(), CompletadoListener {
         val Button_validarRed = findViewById<Button>(R.id.button_validarRed)
         val b_solicitudhttp = findViewById<Button>(R.id.b_solicitudhttp)
         val bVolley = findViewById<Button>(R.id.bVolley)
+        val bOk = findViewById<Button>(R.id.bVolley)
         Button_validarRed.setOnClickListener {
             //Código para validar si hay conexión a internet
             if (Network.hayRed(this)) {
@@ -62,7 +65,13 @@ class MainActivity : AppCompatActivity(), CompletadoListener {
             }
 
         }
-
+        bOk.setOnClickListener {
+            if (Network.hayRed(this)){
+                solicitudHTTPOkHTTP("https://www.google.com")
+            }else{
+                Toast.makeText(this, "Asegúrate de que tengas conexión a una red", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     //Método Volley
     private fun solicitudesHTTP(url: String) {
@@ -76,6 +85,27 @@ class MainActivity : AppCompatActivity(), CompletadoListener {
                 }
             }, Response.ErrorListener { })
         queve.add(solicitud)
+    }
+    //Método OKHTTP
+    private fun solicitudHTTPOkHTTP(url:String){
+        val cliente = OkHttpClient()
+        val solicitud = okhttp3.Request.Builder().url(url).build()
+        cliente.newCall(solicitud).enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: Call?, e: IOException?) {
+                //Manejo de errores
+            }
+
+            override fun onResponse(call: Call?, response: okhttp3.Response) {
+                    val resultado = response.body().string()
+                this@MainActivity.runOnUiThread{
+                    try {
+                        Log.d("SolictudHTTPOkHTTP", resultado)
+                    }catch (e:Exception){
+
+                    }
+                }
+            }
+        })
     }
 
 
