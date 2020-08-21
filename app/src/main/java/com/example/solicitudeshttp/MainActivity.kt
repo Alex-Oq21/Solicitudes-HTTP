@@ -12,10 +12,12 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import okhttp3.Call
 import okhttp3.OkHttpClient
+import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity(), CompletadoListener {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,6 +108,30 @@ class MainActivity : AppCompatActivity(), CompletadoListener {
                 }
             }
         })
+        var respuesta = "{ \"personas\" : [ " +
+                "{" +
+                " \"nombre\" : \"Marcos\" ," +
+                " \"pais\" : \"México\" ," +
+                " \"estado\" : \"soltero\" ," +
+                " \"experiencia\" : 5}," +
+
+                "{" +
+                " \"nombre\" : \"Agustín\" ," +
+                " \"pais\" : \"España\" ," +
+                " \"estado\" : \"casado\" ," +
+                " \"experiencia\" : 16}" +
+                " ]" +
+                " }"
+        val json = JSONObject(respuesta)
+        val personas = json.getJSONArray("personas")
+        for (i in 0..personas.length()-1){
+            val nombre = personas.getJSONObject(i).getString("nombre")
+            val pais = personas.getJSONObject(i).getString("pais")
+            val estado = personas.getJSONObject(i).getString("estado")
+            val experiencia = personas.getJSONObject(i).getInt("experiencia")
+            val persona = Persona(nombre, pais, estado, experiencia)
+            Log.d("Persona", persona.nombre)
+        }
     }
 
 
